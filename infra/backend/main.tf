@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "trc_app" {
       spec {
         container {
           name  = "backend"
-          image = "1trc:v1.10"
+          image = "1trc:v1.18"
           port {
             container_port = 8080
           }

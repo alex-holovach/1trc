@@ -8,6 +8,8 @@ import (
 	"cloud.google.com/go/pubsub"
 	"github.com/alex-holovach/1trc/backend/src/config"
 	"github.com/alex-holovach/1trc/backend/src/consumer"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/fx"
 )
 
@@ -17,8 +19,15 @@ type PubSubWorker struct {
 	messageHandler func(context.Context, *pubsub.Message)
 }
 
+func (w *PubSubWorker) handleTracedMessage(ctx context.Context, message *pubsub.Message) {
+	tracer := otel.Tracer("1trc")
+	ctx, span := tracer.Start(ctx, "trc-pub-sub-handler", trace.WithNewRoot())
+	defer span.End()
+	w.messageHandler(ctx, message)
+}
+
 func (w *PubSubWorker) Run(ctx context.Context) error {
-	return w.subscription.Receive(ctx, w.messageHandler)
+	return w.subscription.Receive(ctx, w.handleTracedMessage)
 }
 
 func PubSubWorkerProvider(config config.AppConfig, c consumer.TrcFileConsunmer, client *pubsub.Client) (*PubSubWorker, error) {
