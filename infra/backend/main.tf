@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "trc_app" {
       spec {
         container {
           name  = "backend"
-          image = "1trc:v1.0"
+          image = "1trc:v1.10"
           port {
             container_port = 8080
           }
@@ -63,6 +63,10 @@ resource "kubernetes_deployment" "trc_app" {
           env {
             name = "SERVICE_ACCOUNT_PATH"
             value = "/app/service-account.json" 
+          }
+          env {
+            name = "OTEL_ENDPOINT"
+            value = "otel-collector.monitoring.svc.cluster.local:4317"
           }
           env {
             name = "REDIS_HOST"

@@ -39,8 +39,7 @@ func RedisClientProvider(config config.AppConfig) *redis.Client {
 	return client
 }
 
-func GcsClientProvider(config config.AppConfig) *storage.Client {
-	ctx := context.Background()
+func GcsClientProvider(config config.AppConfig, ctx context.Context) *storage.Client {
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(config.ServiceAccountFilePath))
 	if err != nil {
 		log.Fatal(err)
@@ -48,8 +47,7 @@ func GcsClientProvider(config config.AppConfig) *storage.Client {
 	return client
 }
 
-func PubSubClientProvider(config config.AppConfig) *pubsub.Client {
-	ctx := context.Background()
+func PubSubClientProvider(config config.AppConfig, ctx context.Context) *pubsub.Client {
 	client, err := pubsub.NewClient(ctx, config.ProjectID, option.WithCredentialsFile(config.ServiceAccountFilePath))
 	if err != nil {
 		log.Fatal(err)

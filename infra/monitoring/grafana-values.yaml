@@ -25,7 +25,16 @@ datasources:
       url: http://prometheus-server.monitoring.svc.cluster.local
       access: proxy
       isDefault: true
-
+    - name: Tempo
+      type: tempo
+      access: proxy
+      orgId: 1
+      url: http://tempo.monitoring.svc.cluster.local:3100
+      basicAuth: false
+      version: 1
+      editable: false
+      apiVersion: 1
+      uid: tempo
 sidecar:
   dashboards:
     enabled: true

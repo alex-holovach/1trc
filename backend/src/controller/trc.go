@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -16,6 +15,7 @@ import (
 	"cloud.google.com/go/storage"
 	"github.com/go-redis/redis"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.uber.org/fx"
 )
 
@@ -29,11 +29,11 @@ type TrcCntrl struct {
 }
 
 func (c *TrcCntrl) SetRoute(mux *http.ServeMux) {
-	mux.HandleFunc("/trc", c.TrillionRowChallenge)
+	mux.Handle("/trc", otelhttp.NewHandler(http.HandlerFunc(c.TrillionRowChallenge), "Run TRC"))
 }
 
 func (c *TrcCntrl) TrillionRowChallenge(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
+	ctx := r.Context()
 	bucket := c.GcsClient.Bucket(c.Config.BucketName)
 	topic := c.PubSubClient.Topic(c.Config.TopicName)
 	processId := uuid.New().String()
