@@ -1,0 +1,36 @@
+server:
+  persistentVolume:
+    enabled: false
+  retention: 15d
+  global:
+    scrape_interval: 15s
+  service:
+    annotations:
+      prometheus.io/scrape: "true"
+
+rbac:
+  create: true
+
+serviceAccounts:
+  server:
+    create: true
+    name: prometheus-server
+
+extraScrapeConfigs: |
+  - job_name: 'kubernetes-services-app-namespace'
+    kubernetes_sd_configs:
+    - role: service
+      namespaces:
+        names:
+        - app
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+      action: keep
+      regex: true
+
+alertmanager:
+  enabled: false
+
+pushgateway:
+  enabled: false
+
