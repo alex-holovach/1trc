@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "trc_app" {
       spec {
         container {
           name  = "backend"
-          image = "1trc:v1.18"
+          image = "us-central1-docker.pkg.dev/trc-challenge/trc-app/trc-app:ea8dd1be5da34c76192fcef0f0feb62b71a96882"
           port {
             container_port = 8080
           }
