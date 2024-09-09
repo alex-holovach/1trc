@@ -33,4 +33,4 @@ jobs:
       run: |
         cd backend
         docker build -t ${{ env.GCR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}/${{ env.IMAGE }}:${{ github.sha }} .
-        docker push ${{ env.GCR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}/${{ env.IMAGE }:${{ github.sha }}
+        docker push ${{ env.GCR_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.IMAGE }}/${{ env.IMAGE }}:${{ github.sha }}
